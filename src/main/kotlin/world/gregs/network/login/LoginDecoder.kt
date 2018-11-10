@@ -1,14 +1,14 @@
 package world.gregs.network.login
 
+import io.netty.buffer.ByteBuf
+import org.slf4j.LoggerFactory
 import world.gregs.network.NetworkConstants
-import world.gregs.network.packets.out.Response
 import world.gregs.network.Session
 import world.gregs.network.packets.InboundPacket
 import world.gregs.network.packets.Packet
 import world.gregs.network.packets.PacketMap
+import world.gregs.network.packets.out.Response
 import world.gregs.services.Decryption
-import io.netty.buffer.ByteBuf
-import org.slf4j.LoggerFactory
 
 interface LoginDecoder {
 
@@ -34,7 +34,7 @@ interface LoginDecoder {
 
         val version = packet.readInt()
         val build = packet.readInt()
-        if (version != NetworkConstants.CLIENT_VERSION || build != NetworkConstants.CLIENT_BUILD) {
+        if (version != NetworkConstants.CLIENT_MAJOR_VERSION || build != NetworkConstants.CLIENT_MINOR_VERSION) {
             logger.info("Invalid game version $version $build")
             session.respond(Response.GAME_UPDATED)
             return

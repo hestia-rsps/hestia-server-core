@@ -5,8 +5,8 @@ import java.math.BigInteger
 
 object NetworkConstants {
 
-    const val CLIENT_VERSION = 667
-    const val CLIENT_BUILD = 1
+    const val CLIENT_MAJOR_VERSION = 667
+    const val CLIENT_MINOR_VERSION = 1
 
     const val BASE_PORT = 43594
 
