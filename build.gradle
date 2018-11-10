@@ -3,7 +3,7 @@ plugins {
 }
 apply plugin: 'maven'
 
-group 'world.gregs'
+group 'world.gregs.hestia'
 version '0.1.0'
 
 repositories {
