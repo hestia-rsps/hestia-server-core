@@ -7,8 +7,7 @@ import world.gregs.hestia.core.network.packets.PacketSize
 import world.gregs.hestia.core.services.plural
 import kotlin.system.measureNanoTime
 
-class PacketLoader(path: String) {
-    private val plugins = Loader(path)
+class PacketLoader(path: String?): Loader(path) {
 
     private val logger = LoggerFactory.getLogger(PacketLoader::class.java)
 
@@ -17,7 +16,7 @@ class PacketLoader(path: String) {
 
         val time = measureNanoTime {
             //Find all InboundPacket classes
-            val classes = plugins.load(packageName, InboundPacket::class)
+            val classes = load<InboundPacket>(packageName)
             classes.forEach { packet ->
                 //Get annotations
                 val opcodeAnnotation = packet::class.java.getAnnotation(PacketOpcode::class.java) ?: return@forEach
