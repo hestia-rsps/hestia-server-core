@@ -64,6 +64,7 @@ object Cache {
         val bytes = ByteArray(buffer.readableBytes() + extra.readableBytes())
         buffer.readBytes(bytes, extra.readableBytes(), buffer.readableBytes())
         extra.readBytes(bytes, 0, extra.readableBytes())
+        buffer.release()
         return bytes
     }
 
