@@ -19,6 +19,7 @@ object Cache {
         versionTable = createVersionTable()
     }
 
+    @Throws(ArrayIndexOutOfBoundsException::class)
     fun getFile(index: Int, archive: Int): ByteArray {
         if(index == 255 && archive == 255) {
             return versionTable
@@ -31,6 +32,7 @@ object Cache {
         return getIndex(index)?.mainFile?.getArchiveData(archive) ?: byteArrayOf()
     }
 
+    @Throws(ArrayIndexOutOfBoundsException::class)
     fun getIndex(index: Int): Index? {
         return STORE?.indexes?.get(index)
     }

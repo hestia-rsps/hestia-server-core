@@ -4,15 +4,14 @@ import io.netty.buffer.ByteBuf
 import org.slf4j.LoggerFactory
 import world.gregs.hestia.core.network.NetworkConstants
 import world.gregs.hestia.core.network.Session
-import world.gregs.hestia.core.network.packets.InboundPacket
 import world.gregs.hestia.core.network.packets.Packet
-import world.gregs.hestia.core.services.load.PacketMap
 import world.gregs.hestia.core.network.packets.out.Response
 import world.gregs.hestia.core.services.Decryption
+import world.gregs.hestia.core.services.load.PacketMap
 
-interface LoginDecoder {
+interface LoginDecoder<T> {
 
-    fun decode(session: Session, buffer: ByteBuf, packets: PacketMap) {
+    fun decode(session: Session, buffer: ByteBuf, packets: PacketMap<T>) {
         val packet = Packet(buffer = buffer)
         val packetId = packet.readUnsignedByte()
 
@@ -66,7 +65,7 @@ interface LoginDecoder {
         handle(session, handler, packet, rsaBuffer, isaacKeys)
     }
 
-    fun handle(session: Session, handler: InboundPacket, packet: Packet, rsaPacket: Packet, isaacKeys: IntArray)
+    fun handle(session: Session, handler: T, packet: Packet, rsaPacket: Packet, isaacKeys: IntArray)
 
     companion object {
         private val logger = LoggerFactory.getLogger(LoginDecoder::class.java)
