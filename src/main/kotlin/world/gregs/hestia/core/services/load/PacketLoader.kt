@@ -11,8 +11,8 @@ class PacketLoader(path: String?): Loader(path) {
 
     private val logger = LoggerFactory.getLogger(PacketLoader::class.java)
 
-    fun load(packageName: String): PacketMap {
-        val packets = PacketMap()
+    fun load(packageName: String): PacketMap<InboundPacket> {
+        val packets = PacketMap<InboundPacket>()
 
         val time = measureNanoTime {
             //Find all InboundPacket classes
