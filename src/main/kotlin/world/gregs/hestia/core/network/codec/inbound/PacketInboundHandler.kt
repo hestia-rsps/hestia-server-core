@@ -1,18 +1,18 @@
 package world.gregs.hestia.core.network.codec.inbound
 
-import world.gregs.hestia.core.network.Session
-import world.gregs.hestia.core.network.packets.InboundPacket
-import world.gregs.hestia.core.network.packets.Packet
-import world.gregs.hestia.core.services.load.PacketMap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandler
 import io.netty.channel.group.ChannelGroup
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.util.concurrent.GlobalEventExecutor
 import org.slf4j.LoggerFactory
+import world.gregs.hestia.core.network.Session
+import world.gregs.hestia.core.network.packets.InboundPacket
+import world.gregs.hestia.core.network.packets.Packet
+import world.gregs.hestia.core.services.load.PacketMap
 
 @ChannelHandler.Sharable
-open class PacketInboundHandler(private val packets: PacketMap) : SessionInboundHandler() {
+open class PacketInboundHandler<T>(private val packets: PacketMap<T>) : SessionInboundHandler() {
 
     private var channels: ChannelGroup = DefaultChannelGroup("channels", GlobalEventExecutor.INSTANCE)
     open val open: Boolean = true
@@ -59,8 +59,10 @@ open class PacketInboundHandler(private val packets: PacketMap) : SessionInbound
         }
     }
 
-    open fun process(session: Session, handler: InboundPacket, packet: Packet, length: Int) {
-        handler.read(session, packet, length)
+    open fun process(session: Session, handler: T, packet: Packet, length: Int) {
+        if(handler is InboundPacket) {
+            handler.read(session, packet, length)
+        }
     }
 
     override fun connect(session: Session) {

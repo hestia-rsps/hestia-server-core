@@ -577,7 +577,7 @@ class Packet(var opcode: Int = -1, val type: Type = Type.STANDARD, val buffer: B
          * @return [Packet]
          */
         fun build(): Packet {
-            return Packet(opcode, type, buffer.copy())
+            return Packet(opcode, type, buffer)
         }
 
         companion object {

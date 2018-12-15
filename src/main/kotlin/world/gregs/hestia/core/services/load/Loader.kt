@@ -1,21 +1,28 @@
 package world.gregs.hestia.core.services.load
 
-import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
-class Loader(private val path: String) {
+open class Loader(val path: String?) {
 
-    private var pattern: Pattern = convertToPattern(path)
-
-    private val logger = LoggerFactory.getLogger(Loader::class.java)
-
-    fun <T : Any> load(packageName: String, c: KClass<T>, recursive: Boolean = true): List<T> {
-        return load(packageName, c.java, recursive)
+    init {
+        if(path == null) {
+            throw NullPointerException("Loader path mustn't be null.")
+        }
     }
 
-    fun <T> load(packageName: String, c: Class<T>, recursive: Boolean = true): List<T> {
+    private var pattern: Pattern = convertToPattern(path!!)
+
+    inline fun <reified T : Any> load(packageName: String, recursive: Boolean = true): List<T> {
+        return loadJavaClasses(packageName, T::class.java, recursive).map { it.getDeclaredConstructor().newInstance() }
+    }
+
+    inline fun <reified T : KClass<*>> loadClasses(packageName: String, type: T, recursive: Boolean = true): List<T> {
+        return loadJavaClasses(packageName, type.java, recursive).map { it::class }.filterIsInstance<T>().toList()
+    }
+
+    inline fun <reified T : Class<*>> loadJavaClasses(packageName: String, type: T, recursive: Boolean = true): List<T> {
         val file = File("$path${packageName.replace(".", "/")}/")
         return if (file.exists()) {
             //Get all package names
@@ -25,31 +32,13 @@ class Loader(private val path: String) {
             val classes = packages.map { Class.forName(it, false, ClassLoader.getSystemClassLoader()) }
 
             //Instantiate all classes
-            classes.asSequence().filter { c.isAssignableFrom(it) }.map { it.getDeclaredConstructor().newInstance() }.filterIsInstance(c).toList()
+            classes.asSequence().filter { type.isAssignableFrom(it) }.filterIsInstance<T>().toList()
         } else {
-            logger.warn("Invalid plugin path: ${file.absolutePath}")
-            emptyList()
+            throw IllegalArgumentException("Invalid plugin path: ${file.absolutePath}")
         }
     }
 
-    fun <T : Class<*>> loadClasses(packageName: String, c: T, recursive: Boolean = true): List<T> {
-        val file = File("$path${packageName.replace(".", "/")}/")
-        return if (file.exists()) {
-            //Get all package names
-            val packages = getPackages(file, recursive)
-
-            //Get classes for each
-            val classes = packages.map { Class.forName(it) }
-
-            //Instantiate all classes
-            classes.asSequence().filter { c.isAssignableFrom(it) }.toList() as List<T>
-        } else {
-            logger.warn("Invalid plugin path: ${file.absolutePath}")
-            emptyList()
-        }
-    }
-
-    private fun getPackages(dir: File, recursive: Boolean): List<String> {
+    fun getPackages(dir: File, recursive: Boolean): List<String> {
         val files = arrayListOf<String>()
         if (dir.isDirectory) {
             dir.listFiles().forEach { file ->

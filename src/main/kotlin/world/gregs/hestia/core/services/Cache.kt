@@ -19,6 +19,7 @@ object Cache {
         versionTable = createVersionTable()
     }
 
+    @Throws(ArrayIndexOutOfBoundsException::class)
     fun getFile(index: Int, archive: Int): ByteArray {
         if(index == 255 && archive == 255) {
             return versionTable
@@ -31,6 +32,7 @@ object Cache {
         return getIndex(index)?.mainFile?.getArchiveData(archive) ?: byteArrayOf()
     }
 
+    @Throws(ArrayIndexOutOfBoundsException::class)
     fun getIndex(index: Int): Index? {
         return STORE?.indexes?.get(index)
     }
@@ -64,6 +66,7 @@ object Cache {
         val bytes = ByteArray(buffer.readableBytes() + extra.readableBytes())
         buffer.readBytes(bytes, extra.readableBytes(), buffer.readableBytes())
         extra.readBytes(bytes, 0, extra.readableBytes())
+        buffer.release()
         return bytes
     }
 

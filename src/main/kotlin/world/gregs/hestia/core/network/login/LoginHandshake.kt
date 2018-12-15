@@ -5,11 +5,11 @@ import world.gregs.hestia.core.network.Session
 import world.gregs.hestia.core.network.codec.inbound.HandshakeHandler
 import world.gregs.hestia.core.network.packets.InboundPacket
 import world.gregs.hestia.core.network.packets.Packet
-import world.gregs.hestia.core.services.load.PacketMap
 import world.gregs.hestia.core.network.packets.out.Response
 import world.gregs.hestia.core.services.Decryption
+import world.gregs.hestia.core.services.load.PacketMap
 
-class LoginHandshake(private val packets: PacketMap, private val listener: LoginRequestListener) : HandshakeHandler(), LoginDecoder {
+class LoginHandshake<T>(private val packets: PacketMap<T>, private val listener: LoginRequestListener) : HandshakeHandler(), LoginDecoder<T> {
 
     override fun process(session: Session, buffer: ByteBuf) {
         decode(session, buffer, packets)
@@ -24,7 +24,7 @@ class LoginHandshake(private val packets: PacketMap, private val listener: Login
         }
     }
 
-    override fun handle(session: Session, handler: InboundPacket, packet: Packet, rsaPacket: Packet, isaacKeys: IntArray) {
+    override fun handle(session: Session, handler: T, packet: Packet, rsaPacket: Packet, isaacKeys: IntArray) {
         if (rsaPacket.readLong() != 0L) {//password should start here (marked by 0L)
             session.respond(Response.BAD_SESSION_ID)
             return
@@ -39,8 +39,10 @@ class LoginHandshake(private val packets: PacketMap, private val listener: Login
         login(session, handler, packet, password, serverSeed, clientSeed)
     }
 
-    fun login(session: Session, handler: InboundPacket, packet: Packet, password: String, serverSeed: Long, clientSeed: Long) {
-        listener.login(session, handler, packet, password, serverSeed, clientSeed)
+    fun login(session: Session, handler: T, packet: Packet, password: String, serverSeed: Long, clientSeed: Long) {
+        if(handler is InboundPacket) {
+            listener.login(session, handler, packet, password, serverSeed, clientSeed)
+        }
     }
 
 }

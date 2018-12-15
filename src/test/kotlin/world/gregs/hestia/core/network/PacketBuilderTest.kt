@@ -63,6 +63,6 @@ internal class PacketBuilderTest {
         Assertions.assertThat(packet).isInstanceOf(Packet::class.java)
         Assertions.assertThat(packet.opcode).isEqualTo(1)
         Assertions.assertThat(packet.type).isEqualTo(Packet.Type.VAR_SHORT)
-        Assertions.assertThat(packet.buffer.array()).containsExactly(0, 123)
+        Assertions.assertThat(packet.buffer.array()).startsWith(0, 123)
     }
 }
