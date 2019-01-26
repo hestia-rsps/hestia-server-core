@@ -9,7 +9,7 @@ import world.gregs.hestia.core.network.packets.out.Response
 import world.gregs.hestia.core.services.Decryption
 import world.gregs.hestia.core.services.load.PacketMap
 
-class LoginHandshake<T>(private val packets: PacketMap<T>, private val listener: LoginRequestListener) : HandshakeHandler(), LoginDecoder<T> {
+open class LoginHandshake<T>(private val packets: PacketMap<T>, private val listener: LoginRequestListener) : HandshakeHandler(), LoginDecoder<T> {
 
     override fun process(session: Session, buffer: ByteBuf) {
         decode(session, buffer, packets)

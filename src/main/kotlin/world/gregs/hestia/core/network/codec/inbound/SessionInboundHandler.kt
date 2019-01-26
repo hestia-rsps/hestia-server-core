@@ -1,9 +1,9 @@
 package world.gregs.hestia.core.network.codec.inbound
 
-import world.gregs.hestia.core.network.NetworkConstants
-import world.gregs.hestia.core.network.Session
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
+import world.gregs.hestia.core.network.NetworkConstants
+import world.gregs.hestia.core.network.Session
 
 abstract class SessionInboundHandler : InboundHandler() {
 

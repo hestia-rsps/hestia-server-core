@@ -12,55 +12,18 @@ import world.gregs.hestia.core.network.packets.Packet
 import world.gregs.hestia.core.services.load.PacketMap
 
 @ChannelHandler.Sharable
-open class PacketInboundHandler<T>(private val packets: PacketMap<T>) : SessionInboundHandler() {
+open class PacketInboundHandler<T>(override val packets: PacketMap<T>) : SessionInboundHandler(), PacketProcessor<T> {
 
     private var channels: ChannelGroup = DefaultChannelGroup("channels", GlobalEventExecutor.INSTANCE)
-    open val open: Boolean = true
+    override val logger = LoggerFactory.getLogger(PacketInboundHandler::class.java)!!
+    override val open: Boolean = true
 
     override fun handle(session: Session, buffer: ByteBuf) {
-        val packet = Packet(buffer.array())
-        while (packet.readableBytes() > 0 && session.channel?.isOpen == true && open) {
-            val packetId = packet.readUnsignedByte()
-            val handler = packets.getPacket(packetId)
-            val packetSize = packets.getSize(packetId)
-
-            if(handler == null || packetSize == null) {
-                if(packetId != 16)
-                logger.warn("Unhandled packet: $packetId ${packet.readableBytes()}")
-                break
-            }
-
-            packet.opcode = packetId
-
-            //Process packet size
-            var length = when(packetSize) {
-                -1 -> packet.readUnsignedByte()
-                -2 -> packet.readShort()
-                -3 -> packet.readInt()
-                -4 -> {
-                    val readable = packet.readableBytes()
-                    logger.warn("Packet ${packet.opcode} is missing a proper size. Might be $readable")
-                    readable
-                }
-                else -> packetSize
-            }
-
-            if (length > packet.readableBytes()) {
-                logger.warn("Packet ${packet.opcode} $packetSize has too large size $length ${packet.readableBytes()}")
-                length = packet.readableBytes()
-            }
-
-            session.ping = System.currentTimeMillis()
-
-            //Process the packet
-            process(session, handler, packet, length)
-
-            packet.buffer.skipBytes(packet.buffer.readableBytes())
-        }
+        super.process(session, Packet(buffer.array()))
     }
 
-    open fun process(session: Session, handler: T, packet: Packet, length: Int) {
-        if(handler is InboundPacket) {
+    override fun process(session: Session, handler: T, packet: Packet, length: Int) {
+        if (handler is InboundPacket) {
             handler.read(session, packet, length)
         }
     }
@@ -75,9 +38,5 @@ open class PacketInboundHandler<T>(private val packets: PacketMap<T>) : SessionI
 
     fun stop() {
         channels.close().awaitUninterruptibly()
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(PacketInboundHandler::class.java)
     }
 }
