@@ -1,15 +1,15 @@
 package world.gregs.hestia.core.network
 
+import io.netty.channel.Channel
+import io.netty.channel.ChannelFutureListener
+import org.slf4j.LoggerFactory
 import world.gregs.hestia.core.network.packets.Packet
 import world.gregs.hestia.core.network.packets.out.ClientResponse
 import world.gregs.hestia.core.network.packets.out.Response
-import io.netty.channel.Channel
-import io.netty.channel.ChannelFutureListener
 import java.net.InetSocketAddress
 
 data class Session(val channel: Channel? = null) {
 
-    var handshake: Boolean = false
     var ping = System.currentTimeMillis()
     var id = -1
 
@@ -29,6 +29,8 @@ data class Session(val channel: Channel? = null) {
                     future.addListener(ChannelFutureListener.CLOSE) ?: channel.close()
                 }
             }
+        } else {
+            logger.info("Channel closed: $packet $channel $id")
         }
     }
 
@@ -42,5 +44,9 @@ data class Session(val channel: Channel? = null) {
 
     fun getHost(): String {
         return (channel?.remoteAddress() as? InetSocketAddress)?.address?.hostAddress ?: NetworkConstants.LOCALHOST
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(Session::class.java)!!
     }
 }

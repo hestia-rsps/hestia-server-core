@@ -35,7 +35,7 @@ internal class PacketTest {
         val emptyArray = ByteArray(packet.length)
         packet.readBytes(emptyArray)
         assertThat(emptyArray.size).isEqualTo(packet.length)
-        assertThat(emptyArray).isEqualTo(packet.buffer.array())
+        assertThat(emptyArray).isEqualTo(packet.buffer.array().copyOf(packet.length))
     }
 
     @Test
