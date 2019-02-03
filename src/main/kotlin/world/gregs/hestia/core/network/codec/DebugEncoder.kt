@@ -12,8 +12,10 @@ class DebugEncoder : MessageToMessageEncoder<Packet>() {
     private val logger = LoggerFactory.getLogger(DebugEncoder::class.java)
 
     override fun encode(context: ChannelHandlerContext?, packet: Packet?, out: MutableList<Any>?) {
-        if (packet == null)
+        if (packet == null) {
+            logger.info("Null packet encode")
             return
+        }
 
         logger.info("Encode ${packet.opcode} ${packet.type} ${packet.buffer.readerIndex()} - ${packet.buffer.writerIndex()} ${packet.buffer.array().toList()}")
         out?.add(Encoder.encode(packet))

@@ -1,17 +1,6 @@
 package world.gregs.hestia.core
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
-import io.netty.buffer.Unpooled
-import io.netty.channel.Channel
-import org.junit.jupiter.api.Test
-import org.slf4j.LoggerFactory
-import world.gregs.hestia.core.network.Session
-import world.gregs.hestia.core.network.codec.inbound.PacketProcessor
-import world.gregs.hestia.core.network.packets.InboundPacket
-import world.gregs.hestia.core.network.packets.Packet
-import world.gregs.hestia.core.services.load.PacketMap
-
+/*
 internal class PacketProcessorTester : PacketProcessor<InboundPacket> {
     override val packets = PacketMap<InboundPacket>()
     override val open: Boolean = true
@@ -36,4 +25,4 @@ internal class PacketProcessorTester : PacketProcessor<InboundPacket> {
         buffer.writeBytes(byteArrayOf(2, 0, 18, 0, 0, 0, 0, 85, 0, 11, 1, 84, 101, 115, 116, 0, 0, 0, 0, 0, 0))
         process(session, Packet(buffer = buffer))
     }
-}
+}*/
