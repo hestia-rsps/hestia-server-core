@@ -1,8 +1,8 @@
-package world.gregs.hestia.core
+package world.gregs.hestia.core.world
 
-class WorldDetails(val activity: String, val ip: String, val region: String, val country: Int, val location: Int = 0, val flag: Int) {
-    var size = 0
-    var id = -1
+class WorldDetails(override val activity: String, override val ip: String, override val region: String, override val country: Int, override val location: Int = 0, override val flag: Int) : Details {
+    override var size = 0
+    override var id = -1
 
     constructor(activity: String, ip: String, region: String, country: Country/*, location: Int*/, vararg settings: Setting) : this(activity, ip, region, country.id, country.id/*, location*/, getFlag(settings))
 

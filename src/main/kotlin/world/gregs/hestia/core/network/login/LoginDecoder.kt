@@ -1,21 +1,29 @@
 package world.gregs.hestia.core.network.login
 
 import io.netty.buffer.ByteBuf
-import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 import world.gregs.hestia.core.network.NetworkConstants
 import world.gregs.hestia.core.network.Session
 import world.gregs.hestia.core.network.packets.Packet
 import world.gregs.hestia.core.network.packets.out.Response
 import world.gregs.hestia.core.services.Decryption
-import world.gregs.hestia.core.services.load.PacketMap
 
+/**
+ * LoginDecoder
+ * Decodes the first half of the login message
+ * The second half is handled by [handle]
+ */
 interface LoginDecoder<T> {
 
-    fun decode(session: Session, buffer: ByteBuf, packets: PacketMap<T>) {
+    val logger: Logger
+
+    fun getHandler(opcode: Int): T?
+
+    fun decode(session: Session, buffer: ByteBuf) {
         val packet = Packet(buffer = buffer)
         val packetId = packet.readUnsignedByte()
 
-        val handler = packets.getPacket(packetId)
+        val handler = getHandler(packetId)
         if(handler == null) {
             logger.warn("Unhandled login request: $packetId ${packet.readableBytes()}")
             session.close()
@@ -66,8 +74,4 @@ interface LoginDecoder<T> {
     }
 
     fun handle(session: Session, handler: T, packet: Packet, rsaPacket: Packet, isaacKeys: IntArray)
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(LoginDecoder::class.java)
-    }
 }

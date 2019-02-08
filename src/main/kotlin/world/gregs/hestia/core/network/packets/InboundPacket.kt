@@ -3,18 +3,11 @@ package world.gregs.hestia.core.network.packets
 import world.gregs.hestia.core.network.Session
 
 /**
- * Annotation for packet opcode(s)
+ * Annotation for packet opcode(s) & size
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FILE)
-annotation class PacketOpcode(vararg val opcodes: Int)
-
-/**
- * Annotation for packet size
- */
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE)
-annotation class PacketSize(val size: Int)
+annotation class PacketInfo(val size: Int, vararg val opcodes: Int)
 
 enum class PacketCheckType {
     REGULAR,
@@ -30,9 +23,8 @@ interface InboundPacket {
      *
      * @param session The connected session.
      * @param packet The packet that has been received.
-     * @param length Length of the packet received.
      */
-    fun read(session: Session, packet: Packet, length: Int): Boolean
+    fun read(session: Session, packet: Packet)
 
     /**
      * Returns the check type for the packet
