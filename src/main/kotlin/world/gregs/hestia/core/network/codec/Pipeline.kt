@@ -7,6 +7,10 @@ import world.gregs.hestia.core.network.NetworkConstants.SESSION_KEY
 import world.gregs.hestia.core.network.Session
 import kotlin.reflect.KClass
 
+/**
+ * Pipeline
+ * Easy to use [ChannelInitializer] with support for [Session], shared handlers and handlers instanced every initiation
+ */
 @ChannelHandler.Sharable
 class Pipeline : ChannelInitializer<SocketChannel>() {
     private var sharedHandlers = ArrayList<ChannelHandler>()

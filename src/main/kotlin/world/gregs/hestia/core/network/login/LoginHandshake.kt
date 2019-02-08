@@ -7,16 +7,21 @@ import world.gregs.hestia.core.network.Session
 import world.gregs.hestia.core.network.codec.inbound.HandshakeHandler
 import world.gregs.hestia.core.network.packets.InboundPacket
 import world.gregs.hestia.core.network.packets.Packet
-import world.gregs.hestia.core.network.packets.PacketOpcode
+import world.gregs.hestia.core.network.packets.PacketInfo
 import world.gregs.hestia.core.network.packets.out.Response
 import world.gregs.hestia.core.services.Decryption
 
+/**
+ * LoginHandshake
+ * Implementation of [HandshakeHandler] for login requests
+ * Processes a single login [packet] calls [listener] with the request data
+ */
 open class LoginHandshake(private val packet: InboundPacket, private val listener: LoginRequestListener) : HandshakeHandler(), LoginDecoder<InboundPacket> {
     override val key = AttributeKey.valueOf<Boolean>("login.handshake")!!
     override val logger = LoggerFactory.getLogger(LoginHandshake::class.java)!!
 
     override fun getHandler(opcode: Int): InboundPacket? {
-        val annotation = packet::class.java.getAnnotation(PacketOpcode::class.java) ?: return null
+        val annotation = packet::class.java.getAnnotation(PacketInfo::class.java) ?: return null
         return if(annotation.opcodes.contains(opcode)) {
             packet
         } else {

@@ -8,6 +8,11 @@ import world.gregs.hestia.core.network.packets.Packet
 import world.gregs.hestia.core.network.packets.out.Response
 import world.gregs.hestia.core.services.Decryption
 
+/**
+ * LoginDecoder
+ * Decodes the first half of the login message
+ * The second half is handled by [handle]
+ */
 interface LoginDecoder<T> {
 
     val logger: Logger

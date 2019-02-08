@@ -7,13 +7,21 @@ import org.slf4j.Logger
 import world.gregs.hestia.core.network.NetworkConstants
 import java.io.IOException
 
+/**
+ * Decoder
+ * Processes incoming bytes
+ */
 abstract class Decoder : ByteToMessageDecoder() {
 
     abstract val logger: Logger
 
-    override fun decode(ctx: ChannelHandlerContext?, `in`: ByteBuf?, out: MutableList<Any>?) {
+    /**
+     * Decodes incoming bytes makes sure there is data and it's less than the [NetworkConstants.INBOUND_DATA_LIMIT]
+     * Data is passed onto [process]
+     */
+    override fun decode(ctx: ChannelHandlerContext, `in`: ByteBuf, out: MutableList<Any>) {
         //Make sure has header
-        if (ctx == null || `in` == null || out == null || `in`.readableBytes() < 1) {
+        if (`in`.readableBytes() < 1) {
             return
         }
 
@@ -29,10 +37,13 @@ abstract class Decoder : ByteToMessageDecoder() {
 
             process(ctx, `in`, out)
         } catch (t: Throwable) {
-            t.printStackTrace()
+            logger.debug("Error Decoding: ", t)
         }
     }
 
+    /**
+     * By default all data is added to [out] for processing
+     */
     open fun process(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
         out.add(buf.readBytes(buf.readableBytes()))
     }

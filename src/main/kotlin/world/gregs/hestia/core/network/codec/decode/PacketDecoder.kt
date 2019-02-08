@@ -4,10 +4,19 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import world.gregs.hestia.core.network.packets.Packet
 
+/**
+ * PacketDecoder
+ * Checks inbound data forms complete packets before processing
+ */
 abstract class PacketDecoder : Decoder() {
 
     abstract fun getSize(opcode: Int): Int?
 
+    /**
+     * Processes [buf] adds packets to [out] when they are complete
+     * If expected size is greater than the amount of data available then [missingData] is called
+     * If there is no known information on the packet then [missingSize] is called
+     */
     override fun process(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
         //Read all complete packets
         while (buf.isReadable && ctx.channel().isOpen) {

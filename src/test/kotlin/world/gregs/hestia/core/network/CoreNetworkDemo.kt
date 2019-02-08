@@ -13,12 +13,6 @@ import world.gregs.hestia.core.network.server.Network
 internal class CoreNetworkDemo {
     internal class LoginHandshakeDecoder : HandshakeDecoder() {
 
-
-        override fun decode(ctx: ChannelHandlerContext?, `in`: ByteBuf?, out: MutableList<Any>?) {
-            println("Decode ${`in`?.readableBytes()}")
-            super.decode(ctx, `in`, out)
-        }
-
         override fun process(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
             println("Process")
             super.process(ctx, buf, out)

@@ -11,17 +11,19 @@ import world.gregs.hestia.core.network.getSession
 import world.gregs.hestia.core.network.packets.Packet
 import java.io.IOException
 
+/**
+ * HandshakeHandler
+ * Handles handshakes running [handshake] only once per session
+ * All other processing goes to [process]
+ * Relies on [world.gregs.hestia.core.network.codec.decode.HandshakeDecoder]
+ */
 @ChannelHandler.Sharable
 abstract class HandshakeHandler : ChannelInboundHandlerAdapter() {
 
     abstract val logger: Logger
     abstract val key: AttributeKey<Boolean>
 
-    override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
-        if(ctx == null || msg == null) {
-            return
-        }
-
+    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         val session = ctx.getSession()
         if(msg is Packet) {
             val channel = ctx.channel()

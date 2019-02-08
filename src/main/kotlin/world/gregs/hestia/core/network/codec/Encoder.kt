@@ -7,6 +7,10 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToMessageEncoder
 import world.gregs.hestia.core.network.packets.Packet
 
+/**
+ * Encoder
+ * Encodes [Packet] data into the outgoing message
+ */
 @ChannelHandler.Sharable
 class Encoder : MessageToMessageEncoder<Packet>() {
 

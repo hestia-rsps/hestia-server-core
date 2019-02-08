@@ -4,6 +4,10 @@ import org.slf4j.Logger
 import world.gregs.hestia.core.network.Session
 import world.gregs.hestia.core.network.packets.Packet
 
+/**
+ * PacketProcessor
+ * Processes a single packet finding the handler and resetting the sessions ping timeout
+ */
 interface PacketProcessor<T> {
     val logger: Logger
 
@@ -21,20 +25,15 @@ interface PacketProcessor<T> {
         session.ping = System.currentTimeMillis()
 
         //Process the packet
-        process(session, handler, packet, packet.readableBytes(), packet.buffer.readerIndex())
+        process(session, handler, packet)
     }
 
     fun getHandler(opcode: Int): T?
 
-    fun process(session: Session, handler: T?, packet: Packet, length: Int, offset: Int) {
+    fun process(session: Session, handler: T?, packet: Packet) {
         if (handler == null) {
-            logger.warn("Unhandled packet processing: ${packet.opcode} $length")
+            logger.warn("Unhandled packet processing: ${packet.opcode}")
             return
         }
-
-        //Process the packet
-        process(session, handler, packet, length)
     }
-
-    fun process(session: Session, handler: T, packet: Packet, length: Int)
 }
