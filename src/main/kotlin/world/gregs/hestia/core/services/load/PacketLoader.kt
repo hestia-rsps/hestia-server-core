@@ -2,8 +2,7 @@ package world.gregs.hestia.core.services.load
 
 import org.slf4j.LoggerFactory
 import world.gregs.hestia.core.network.packets.InboundPacket
-import world.gregs.hestia.core.network.packets.PacketOpcode
-import world.gregs.hestia.core.network.packets.PacketSize
+import world.gregs.hestia.core.network.packets.PacketInfo
 import world.gregs.hestia.core.services.plural
 import kotlin.system.measureNanoTime
 
@@ -19,11 +18,10 @@ class PacketLoader(path: String?): Loader(path) {
             val classes = load<InboundPacket>(packageName)
             classes.forEach { packet ->
                 //Get annotations
-                val opcodeAnnotation = packet::class.java.getAnnotation(PacketOpcode::class.java) ?: return@forEach
-                val sizeAnnotation = packet::class.java.getAnnotation(PacketSize::class.java) ?: return@forEach
+                val annotation = packet::class.java.getAnnotation(PacketInfo::class.java) ?: return@forEach
                 //Insert into packets list for all opcodes
-                opcodeAnnotation.opcodes.forEach { opcode ->
-                    packets[opcode] = Pair(packet, sizeAnnotation.size)
+                annotation.opcodes.forEach { opcode ->
+                    packets[opcode] = Pair(packet, annotation.size)
                 }
             }
         }

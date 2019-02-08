@@ -13,6 +13,8 @@ import world.gregs.hestia.core.network.packets.Packet.Type
  */
 class Packet(var opcode: Int = -1, val type: Type = Type.STANDARD, val buffer: ByteBuf) {
 
+    constructor(packet: Packet) : this(packet.opcode, packet.type, packet.buffer.discardReadBytes())
+
     constructor(array: ByteArray) : this(buffer = Unpooled.wrappedBuffer(array))
 
     val length: Int
@@ -22,7 +24,7 @@ class Packet(var opcode: Int = -1, val type: Type = Type.STANDARD, val buffer: B
 
     init {
         Companion.type = type
-        this.length = buffer.readableBytes()
+        length = buffer.readableBytes()
     }
 
     /**
@@ -182,7 +184,7 @@ class Packet(var opcode: Int = -1, val type: Type = Type.STANDARD, val buffer: B
         val i = 0xff and readByte()
         buffer.resetReaderIndex()
         return if (i >= 128) {
-            -32768 + this.readUnsignedShort()
+            -32768 + readUnsignedShort()
         } else {
             readUnsignedByte()
         }
@@ -265,6 +267,22 @@ class Packet(var opcode: Int = -1, val type: Type = Type.STANDARD, val buffer: B
      */
     fun readableBytes(): Int {
         return buffer.readableBytes()
+    }
+
+    /**
+     * Resets the reader index
+     * @return [Int]
+     */
+    fun resetReader() {
+        buffer.resetReaderIndex()
+    }
+
+    /**
+     * Resets the writer index
+     * @return [Int]
+     */
+    fun resetWriter() {
+        buffer.resetWriterIndex()
     }
 
     enum class Type {
@@ -355,6 +373,17 @@ class Packet(var opcode: Int = -1, val type: Type = Type.STANDARD, val buffer: B
          * @param length Amount of array to be written
          */
         fun writeBytes(data: ByteArray, offset: Int, length: Int): Builder {
+            buffer.writeBytes(data, offset, length)
+            return this
+        }
+
+        /**
+         * Writes part of a [ByteBuf] to [buffer] at position
+         * @param data [ByteBuf] to be read from
+         * @param offset Index to start writing to
+         * @param length Amount of array to be written
+         */
+        fun writeBytes(data: ByteBuf, offset: Int, length: Int): Builder {
             buffer.writeBytes(data, offset, length)
             return this
         }

@@ -44,6 +44,12 @@ internal class PacketBuilderTest {
     }
 
     @Test
+    fun writeBufBytesPosition() {
+        val packet = Packet.Builder().writeBytes(Unpooled.wrappedBuffer(byteArrayOf(3, 2, 1)), 2, 1).build()
+        Assertions.assertThat(packet.readByte()).isEqualTo(1)
+    }
+
+    @Test
     fun skip() {
         val packet = Packet.Builder().skip(1).writeByte(2).build()
         Assertions.assertThat(packet.readByte()).isEqualTo(0)
