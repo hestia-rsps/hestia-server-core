@@ -4,7 +4,6 @@ import org.yaml.snakeyaml.Yaml
 import java.io.File
 
 object Settings {
-
     private var map: Map<String, Any>? = null
     private var yaml: Yaml? = null
 
