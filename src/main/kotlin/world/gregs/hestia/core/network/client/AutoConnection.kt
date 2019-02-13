@@ -1,6 +1,6 @@
 package world.gregs.hestia.core.network.client
 
-import world.gregs.hestia.core.network.codec.Pipeline
+import world.gregs.hestia.core.network.Pipeline
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
