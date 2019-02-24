@@ -8,7 +8,6 @@ class DecoderThreadFactory : CoreThreadFactory("Decoder", Thread.MAX_PRIORITY - 
         return poolNumber.getAndIncrement()
     }
 
-
     companion object {
         private val poolNumber = AtomicInteger(1)
     }
