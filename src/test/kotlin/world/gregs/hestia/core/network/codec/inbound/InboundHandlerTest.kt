@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import world.gregs.hestia.core.network.NetworkConstants
 
 internal class InboundHandlerTest {
 //    private lateinit var handler: InboundHandler
@@ -38,7 +37,7 @@ internal class InboundHandlerTest {
     @Test
     fun `Giant buffer not handled`() {
         //Given
-        for(i in 0 .. NetworkConstants.INBOUND_DATA_LIMIT) {
+        for(i in 0 .. 7500) {
             buffer.writeByte(0)
         }
         //When

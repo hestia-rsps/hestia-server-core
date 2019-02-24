@@ -8,7 +8,6 @@ class LoaderThreadFactory : CoreThreadFactory("Loader", Thread.NORM_PRIORITY) {
         return poolNumber.getAndIncrement()
     }
 
-
     companion object {
         private val poolNumber = AtomicInteger(1)
     }
