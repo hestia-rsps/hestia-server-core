@@ -2,9 +2,10 @@ package world.gregs.hestia.core.network.codec.packet
 
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import world.gregs.hestia.core.cache.crypto.Cipher
+import world.gregs.hestia.core.services.int
 
-open class PacketWriter(private var opcode: Int? = null, private var type: Packet.Type = Packet.Type.STANDARD, final override val buffer: ByteBuf = Unpooled.buffer()) : PacketBuilder {
-    private var headerIndex = 0
+open class PacketWriter(private var opcode: Int? = null, private var type: Packet.Type = Packet.Type.STANDARD, final override val buffer: ByteBuf = Unpooled.buffer(), private val cipher: Cipher? = null) : PacketBuilder {
     private var sizeIndex = 0
     private var bitIndex = 0
     private var mode = AccessMode.BYTE
@@ -18,9 +19,17 @@ open class PacketWriter(private var opcode: Int? = null, private var type: Packe
     final override fun writeOpcode(opcode: Int, type: Packet.Type) {
         this.type = type
         this.opcode = opcode
-        headerIndex = buffer.writerIndex()
+        if (cipher != null) {
+            if (opcode >= 128) {
+                writeByte(((opcode shr 8) + 128) + cipher.nextInt())
+                writeByte(opcode + cipher.nextInt())
+            } else {
+                writeByte(opcode + cipher.nextInt())
+            }
+        } else {
+            writeSmart(opcode)
+        }
         //Write opcode
-        writeSmart(opcode)
         //Save index where size is written
         sizeIndex = buffer.writerIndex()
         //Write length placeholder
@@ -104,6 +113,10 @@ open class PacketWriter(private var opcode: Int? = null, private var type: Packe
         return this
     }
 
+    final override fun writeBits(bitCount: Int, value: Boolean): PacketBuilder {
+        return writeBits(bitCount, value.int)
+    }
+
     final override fun writeBits(bitCount: Int, value: Int): PacketBuilder {
 //        checkBitAccess()
         var numBits = bitCount
@@ -116,17 +129,24 @@ open class PacketWriter(private var opcode: Int? = null, private var type: Packe
         requiredSpace += (numBits + 7) / 8
         buffer.ensureWritable(requiredSpace)
 
-        var byte = buffer.getByte(bytePos)
         while (numBits > bitOffset) {
-            buffer.setByte(bytePos++, (byte.toInt() or (value shr numBits - bitOffset and BIT_MASKS[bitOffset])).toByte().toInt())
+            var tmp = buffer.getByte(bytePos).toInt()
+            tmp = tmp and BIT_MASKS[bitOffset].inv()
+            tmp = tmp or (value shr numBits - bitOffset and BIT_MASKS[bitOffset])
+            buffer.setByte(bytePos++, tmp)
             numBits -= bitOffset
             bitOffset = 8
-            byte = buffer.getByte(bytePos)
         }
         if (numBits == bitOffset) {
-            buffer.setByte(bytePos, (byte.toInt() or (value and BIT_MASKS[bitOffset])).toByte().toInt())
+            var tmp = buffer.getByte(bytePos).toInt()
+            tmp = tmp and BIT_MASKS[bitOffset].inv()
+            tmp = tmp or (value and BIT_MASKS[bitOffset])
+            buffer.setByte(bytePos, tmp)
         } else {
-            buffer.setByte(bytePos, (byte.toInt() or (value and BIT_MASKS[numBits] shl bitOffset - numBits)).toByte().toInt())
+            var tmp = buffer.getByte(bytePos).toInt()
+            tmp = tmp and (BIT_MASKS[numBits] shl bitOffset - numBits).inv()
+            tmp = tmp or (value and BIT_MASKS[numBits] shl bitOffset - numBits)
+            buffer.setByte(bytePos, tmp)
         }
         return this
     }
@@ -150,7 +170,7 @@ open class PacketWriter(private var opcode: Int? = null, private var type: Packe
     override fun write(type: DataType, value: Number, modifier: Modifier, order: Endian) {
 //        checkByteAccess()
         val longValue = value.toLong()
-        when(order) {
+        when (order) {
             Endian.BIG, Endian.LITTLE -> {
                 val range = if (order == Endian.LITTLE) 0 until type.length else type.length - 1 downTo 0
                 for (i in range) {

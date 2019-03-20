@@ -28,7 +28,7 @@ class Index(private val index255: MainFile, val mainFile: MainFile) {
         if (archiveData != null) {
             crc = CRC.getHash(archiveData)
             whirlpool = Whirlpool.whirlpool(archiveData, 0, archiveData.size)
-            val archive = Archive(id, archiveData, null as IntArray?)
+            val archive = Archive(id, archiveData, null)
             table = ReferenceTable(archive)
             resetCachedFiles()
         }
@@ -98,6 +98,10 @@ class Index(private val index255: MainFile, val mainFile: MainFile) {
         return if (!archiveExists(archiveId)) null else getFile(archiveId, table!!.archives!![archiveId]!!.validFileIds!![0])
     }
 
+    fun getFile(archiveId: Int, keys: IntArray?): ByteArray? {
+        return if (!archiveExists(archiveId)) null else getFile(archiveId, table!!.archives!![archiveId]!!.validFileIds!![0], keys)
+    }
+
     fun getFile(archiveId: Int, fileId: Int): ByteArray? {
         return getFile(archiveId, fileId, null)
     }
@@ -137,7 +141,7 @@ class Index(private val index255: MainFile, val mainFile: MainFile) {
                     val amtOfLoops = data[readPosition].toInt() and 255
                     readPosition -= amtOfLoops * filesCount * 4
                     val buffer = ByteBuffer.wrap(data)
-                    (buffer as Buffer).position(readPosition)//Java 8 comparability
+                    (buffer as Buffer).position(readPosition)//Java 8 compatibility
                     val filesSize = IntArray(filesCount)
 
                     var sourceOffset: Int

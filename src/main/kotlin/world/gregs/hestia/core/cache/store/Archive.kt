@@ -23,12 +23,14 @@ class Archive(val id: Int, archive: ByteArray, val keys: IntArray?) {
 
     private fun decompress(archive: ByteArray) {
         val buffer = ByteBuffer.wrap(archive)
-        if (keys != null && keys.isNotEmpty()) {
-            Xtea.decipher(buffer, keys)
-        }
 
         compression = buffer.getUByte()
         val compressedLength = buffer.int
+
+        if (keys != null && keys.isNotEmpty()) {
+            Xtea.decipher(buffer, keys, 5, compressedLength + if(compression == NO_COMPRESSION) 5 else 9)
+        }
+
         if (compressedLength in 0..MAX_VALID_ARCHIVE_LENGTH) {
             val length: Int
             when (compression) {

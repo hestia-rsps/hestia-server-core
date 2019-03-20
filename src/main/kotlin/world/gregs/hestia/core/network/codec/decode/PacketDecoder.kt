@@ -2,50 +2,67 @@ package world.gregs.hestia.core.network.codec.decode
 
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
+import io.netty.handler.codec.ByteToMessageDecoder
+import org.slf4j.LoggerFactory
 import world.gregs.hestia.core.network.codec.packet.PacketReader
 import world.gregs.hestia.core.network.getSession
 
 /**
- * Checks inbound data forms complete packets before processing
+ * Reads inbound data into [PacketReader] which are added to the pipeline
  */
-abstract class PacketDecoder : ByteDecoder() {
+abstract class PacketDecoder : ByteToMessageDecoder() {
 
-    /**
-     * Processes [buf] adds packets to [out] when they are complete
-     * If expected size is greater than the amount of data available then [missingData] is called
-     * If there is no known information on the packet then [missingSize] is called
-     */
-    override fun process(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
-        //Read all complete packets
-        while (buf.isReadable && ctx.channel().isOpen) {
-            //Read packet opcode
-            val opcode = buf.readUnsignedByte().toInt()
-            //Find packet size
-            val size = getSize(ctx, opcode)
+    internal val logger = LoggerFactory.getLogger(this::class.java)!!
 
-            if (size == null) {
-                missingSize(ctx, buf, opcode, out)
-                break
+    private enum class DecoderState {
+        READ_OPCODE,
+        READ_LENGTH,
+        READ_PAYLOAD
+    }
+
+    private var state = DecoderState.READ_OPCODE
+    private var opcode = 0
+    private var size = 0
+
+    @Throws(NullPointerException::class)
+    override fun decode(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
+        if (state == DecoderState.READ_OPCODE) {
+            if (!buf.isReadable) {
+                return
             }
 
-            //Calculate expected size
-            val expectedSize = when (size) {
+            //Read packet opcode
+            opcode = readOpcode(buf)
+            //Find packet size
+            size = getSize(ctx, opcode)!!
+            //Read length if variable byte or short (-1, -2)
+            state = if (size < 0) DecoderState.READ_LENGTH else DecoderState.READ_PAYLOAD
+        }
+
+        if (state == DecoderState.READ_LENGTH) {
+            if (buf.readableBytes() < if(size == -1) 1 else 2) {
+                return
+            }
+            //Read the exact payload size
+            size = when (size) {
                 -1 -> buf.readUnsignedByte().toInt()
                 -2 -> buf.readShort().toInt()
-                else -> size
+                else -> throw IllegalStateException("Illegal read size $size")
             }
 
-            //Check size is available
-            if (!buf.isReadable(expectedSize)) {
-                missingData(ctx, buf, opcode, expectedSize)
+            state = DecoderState.READ_PAYLOAD
+        }
+
+        if (state == DecoderState.READ_PAYLOAD) {
+            if (buf.readableBytes() < size) {
                 return
             }
 
             //Copy from unsafe buffer
-            val buffer = buf.readBytes(expectedSize)
+            val buffer = buf.readBytes(size)
 
-            //Mark beginning of next packet
-            buf.markReaderIndex()
+            //Reset state
+            state = DecoderState.READ_OPCODE
 
             //Reset ping
             ctx.getSession().ping = System.currentTimeMillis()
@@ -56,27 +73,19 @@ abstract class PacketDecoder : ByteDecoder() {
     }
 
     /**
+     * Returns the packet opcode
+     * @param buf The buffer to read from
+     * @return The packets opcode
+     */
+    open fun readOpcode(buf: ByteBuf): Int {
+        return buf.readUnsignedByte().toInt()
+    }
+
+    /**
      * Returns the expected size of a packet
+     * @param ctx Channel context
      * @param opcode The packet who's size to get
      * @return The expected size (if any)
      */
     abstract fun getSize(ctx: ChannelHandlerContext, opcode: Int): Int?
-
-    /**
-     * Handles action when there is less data than size
-     */
-    open fun missingData(ctx: ChannelHandlerContext, buf: ByteBuf, opcode: Int, expected: Int) {
-        //Byte default handle fragmented data: reset the reader and allow buffer to accumulate more data
-        buf.resetReaderIndex()
-    }
-
-    /**
-     * Handles when a packet doesn't have a specified size
-     */
-    open fun missingSize(ctx: ChannelHandlerContext, buf: ByteBuf, opcode: Int, out: MutableList<Any>) {
-        //Clears buffer to stop accumulation
-        logger.warn("Unhandled packet: $opcode ${buf.readableBytes()}")
-        buf.skipBytes(buf.readableBytes())
-        out.add(11)
-    }
 }
