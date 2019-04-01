@@ -131,6 +131,13 @@ interface PacketBuilder {
      * @param bitCount number of bits to be written
      * @param value bit value to be set
      */
+    fun writeBits(bitCount: Int, value: Boolean): PacketBuilder
+
+    /**
+     * Writes a bit during 'bit access'
+     * @param bitCount number of bits to be written
+     * @param value bit value to be set
+     */
     fun writeBits(bitCount: Int, value: Int): PacketBuilder
 
     /**

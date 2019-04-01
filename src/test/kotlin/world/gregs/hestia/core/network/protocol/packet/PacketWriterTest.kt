@@ -51,16 +51,30 @@ internal class PacketWriterTest {
     @Test
     fun `Write bit access`() {
         //Given
-        builder(3, Packet.Type.VAR_BYTE)
+        builder(69, Packet.Type.VAR_BYTE)
         //When
         start()
-        bits(4, 2)
+        bits(1, 1)
+        bits(1, 1)
+        bits(2, 0)
         finish()
+
+        repeat(2) {
+            start()
+            finish()
+        }
+
         build()
         //Then
-        assertOpcode(3)
+        assertOpcode(69)
         assertSize(1, Packet.Type.VAR_BYTE)
-        assertByte(32)
+        val test = PacketWriter()
+        test.startBitAccess()
+        test.writeBits(1, 1)
+        test.writeBits(1, 1)
+        test.writeBits(2, 0)
+        test.finishBitAccess()
+        assertByte(-64)
     }
 
     @Test
