@@ -1,6 +1,7 @@
 package world.gregs.hestia.core.network.codec.message
 
 import io.netty.buffer.ByteBuf
+import world.gregs.hestia.core.cache.crypto.Cipher
 import world.gregs.hestia.core.network.codec.packet.Packet
 import world.gregs.hestia.core.network.codec.packet.PacketBuilder
 import world.gregs.hestia.core.network.codec.packet.PacketWriter
@@ -18,10 +19,11 @@ abstract class MessageEncoder<T : Message> {
      * Writes encoded message to outbound buffer
      * @param message The message to encode
      * @param out The buffer to write the encoded data too
+     * @param cipher The isaac cipher to encrypt with
      */
-    fun write(message: T, out: ByteBuf) {
+    fun write(message: T, out: ByteBuf, cipher: Cipher? = null) {
         //Wrap the out buffer in a packet builder
-        val packet = PacketWriter(buffer = out)
+        val packet = PacketWriter(buffer = out, cipher = cipher)
         //Encode the message into the packet buffer
         encode(packet, message)
         //Finish writing the packet

@@ -51,9 +51,9 @@ object ClientOpcodes {
     const val WIDGET_BUTTON_1 = 61
     const val WIDGET_BUTTON_2 = 64
     const val INTERFACE_ON_MOB = 65
-    const val KEY_TYPED = 68
     const val ATTACK_MOB = 66
     const val MOB_CLICK_3 = 67
+    const val KEY_TYPED = 68
     const val OBJECT_5 = 69
     const val CONSOLE_COMMAND = 70
     const val PRIVATE_MESSAGE = 72
@@ -95,13 +95,13 @@ object ClientOpcodes {
     const val FRIENDS_CHAT_MESSAGE = 40
     const val PRIVATE_QUICK_CHAT_FROM = 42
     const val REGION = 43
-    const val IGNORE_LIST = 57
-    const val PRIVATE_CHAT_TO = 77
     const val SCRIPT = 50
     const val LOGOUT = 51
+    const val IGNORE_LIST = 57
     const val LOGOUT_LOBBY = 59
     const val WIDGET_WINDOW = 67
     const val WIDGET_CLOSE = 73
+    const val PRIVATE_CHAT_TO = 77
     const val FILE_CONFIG_LARGE = 84
     const val FRIEND_LIST = 85
     const val WORLD_LIST = 88
@@ -111,14 +111,14 @@ object ClientOpcodes {
     const val WIDGET_MOB_HEAD = 98
     const val CONFIG = 101
     const val CHAT = 102
-    const val GLOBAL_CONFIG_LARGE = 112
+    const val IGNORE_LIST_UPDATE = 105
     const val GLOBAL_CONFIG = 111
+    const val GLOBAL_CONFIG_LARGE = 112
     const val WIDGET_PLAYER_HEAD = 114
     const val PRIVATE_CHAT_FROM = 120
     const val DYNAMIC_REGION = 128
-    const val FRIEND_LIST_DISCONNECT = 135
-    const val IGNORE_LIST_UPDATE = 105
     const val PRIVATE_STATUS = 134
+    const val FRIEND_LIST_DISCONNECT = 135
 
     /* Handshake */
     const val LOGIN_HANDSHAKE = 14

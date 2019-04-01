@@ -8,14 +8,15 @@ import world.gregs.hestia.core.network.codec.message.MessageHandshake
 
 open class DebugPacketHandshakeDecoder(codec: HandshakeCodec, handshake: MessageHandshake) : SimplePacketHandshakeDecoder(codec, handshake) {
 
-    override fun decode(ctx: ChannelHandlerContext, `in`: ByteBuf, out: MutableList<Any>) {
-        logger.debug("Decoding bytes ${`in`.readableBytes()}")
-        super.decode(ctx, `in`, out)
+    override fun decode(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
+        logger.debug("Decoding bytes ${buf.readableBytes()}")
+        super.decode(ctx, buf, out)
     }
 
-    override fun process(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
-        logger.debug("Processing data...")
-        super.process(ctx, buf, out)
+    override fun readOpcode(buf: ByteBuf): Int {
+        val opcode = super.readOpcode(buf)
+        logger.debug("Read opcode $opcode")
+        return opcode
     }
 
     override fun getSize(ctx: ChannelHandlerContext, opcode: Int): Int? {
@@ -23,13 +24,4 @@ open class DebugPacketHandshakeDecoder(codec: HandshakeCodec, handshake: Message
         return super.getSize(ctx, opcode)
     }
 
-    override fun missingData(ctx: ChannelHandlerContext, buf: ByteBuf, opcode: Int, expected: Int) {
-        logger.debug("Missing data: $opcode expected: $expected actual: ${buf.readableBytes()}.")
-        super.missingData(ctx, buf, opcode, expected)
-    }
-
-    override fun missingSize(ctx: ChannelHandlerContext, buf: ByteBuf, opcode: Int, out: MutableList<Any>) {
-        logger.debug("Missing size $opcode")
-        super.missingSize(ctx, buf, opcode, out)
-    }
 }
