@@ -34,7 +34,7 @@ abstract class PacketDecoder : ByteToMessageDecoder() {
             //Read packet opcode
             opcode = readOpcode(buf)
             //Find packet size
-            size = getSize(ctx, opcode)!!
+            size = getSize(ctx, opcode) ?: throw IllegalArgumentException("Unknown opcode: $opcode")
             //Read length if variable byte or short (-1, -2)
             state = if (size < 0) DecoderState.READ_LENGTH else DecoderState.READ_PAYLOAD
         }
