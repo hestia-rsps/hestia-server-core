@@ -6,6 +6,8 @@ ext {
     slf4j_version = "1.7.25"
     logback_version = "1.2.3"
 
+    guava_version = "27.1-jre"
+    
     junit_version = "5.0.0"
     assertj_version = "3.11.1"
     mockito_version = "1.10.19"
@@ -13,13 +15,17 @@ ext {
 
     mainDependencies = [
             kotlinJdk: "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
-            netty: "io.netty:netty-all:$netty_version",
-            yaml: "org.yaml:snakeyaml:$yaml_version",
+            netty    : "io.netty:netty-all:$netty_version",
+            yaml     : "org.yaml:snakeyaml:$yaml_version",
     ]
 
     logDependencies = [
             slf4j  : "org.slf4j:slf4j-api:$slf4j_version",
             logback: "ch.qos.logback:logback-classic:$logback_version",
+    ]
+
+    utilityDependencies = [
+            guava    : "com.google.guava:guava:$guava_version",
     ]
 
     testDependencies = [

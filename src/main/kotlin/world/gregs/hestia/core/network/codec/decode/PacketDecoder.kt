@@ -24,7 +24,7 @@ abstract class PacketDecoder : ByteToMessageDecoder() {
     private var opcode = 0
     private var size = 0
 
-    @Throws(NullPointerException::class)
+    @Throws(IllegalStateException::class, IllegalArgumentException::class)
     override fun decode(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
         if (state == DecoderState.READ_OPCODE) {
             if (!buf.isReadable) {

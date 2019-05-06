@@ -10,6 +10,7 @@ class PacketReader(override var opcode: Int = -1, override val type: Packet.Type
     constructor(array: ByteArray) : this(buffer = Unpooled.wrappedBuffer(array))
 
     override val length: Int = buffer.readableBytes()
+    private var bitIndex = 0
 
     override fun readSmart(): Int {
         val peek = readUnsignedByte()
@@ -184,5 +185,52 @@ class PacketReader(override var opcode: Int = -1, override val type: Packet.Type
             }
         }
         return longValue
+    }
+
+    override fun startBitAccess(): Packet {
+        bitIndex = buffer.readerIndex() * 8
+        return this
+    }
+
+    override fun finishBitAccess(): Packet {
+        buffer.readerIndex((bitIndex + 7) / 8)
+        return this
+    }
+
+    @Suppress("NAME_SHADOWING")
+    override fun readBits(bitCount: Int): Int {
+        if (bitCount < 0 || bitCount > 32) {
+            throw IllegalArgumentException("Number of bits must be between 1 and 32 inclusive")
+        }
+
+        var bitCount = bitCount
+        var bytePos = bitIndex shr 3
+        var bitOffset = 8 - (bitIndex and 7)
+        var value = 0
+        bitIndex += bitCount
+
+        while (bitCount > bitOffset) {
+            value += buffer.getByte(bytePos++).toInt() and BIT_MASKS[bitOffset] shl bitCount - bitOffset
+            bitCount -= bitOffset
+            bitOffset = 8
+        }
+        value += if (bitCount == bitOffset) {
+            buffer.getByte(bytePos).toInt() and BIT_MASKS[bitOffset]
+        } else {
+            buffer.getByte(bytePos).toInt() shr bitOffset - bitCount and BIT_MASKS[bitCount]
+        }
+        return value
+    }
+
+    companion object {
+        /**
+         * Bit masks for [readBits]
+         */
+        private val BIT_MASKS = IntArray(32)
+
+        init {
+            for (i in BIT_MASKS.indices)
+                BIT_MASKS[i] = (1 shl i) - 1
+        }
     }
 }

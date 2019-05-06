@@ -215,6 +215,23 @@ interface Packet {
     fun readUnsigned(type: DataType, modifier: Modifier = Modifier.NONE, order: Endian = Endian.BIG): Long
 
     /**
+     * Enables individual decoded byte writing aka 'bit access'
+     */
+    fun startBitAccess(): Packet
+
+    /**
+     * Disables 'bit access'
+     */
+    fun finishBitAccess(): Packet
+
+    /**
+     * Writes a bit during 'bit access'
+     * @param bitCount number of bits to be written
+     * @param value bit value to be set
+     */
+    fun readBits(bitCount: Int): Int
+
+    /**
      * PacketType
      */
     enum class Type(val int: Int) {
