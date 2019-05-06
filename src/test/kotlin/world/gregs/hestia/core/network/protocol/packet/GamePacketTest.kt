@@ -4,9 +4,9 @@ import io.netty.buffer.Unpooled
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import world.gregs.hestia.core.network.codec.packet.Endian
-import world.gregs.hestia.core.network.codec.packet.PacketReader
-import world.gregs.hestia.core.network.codec.packet.Packet
 import world.gregs.hestia.core.network.codec.packet.Modifier
+import world.gregs.hestia.core.network.codec.packet.Packet
+import world.gregs.hestia.core.network.codec.packet.PacketReader
 
 internal class GamePacketTest {
 
@@ -159,6 +159,18 @@ internal class GamePacketTest {
         //Then
         assertThat(packet.readLong()).isEqualTo(2)
         assertThat(packet.readLong()).isEqualTo(-2)
+    }
+
+
+    @Test
+    fun `Read bit access`() {
+        //Given
+        packet(-64)
+        //Then
+        packet.startBitAccess()
+        assertThat(packet.readBits(1)).isEqualTo(1)
+        assertThat(packet.readBits(1)).isEqualTo(1)
+        assertThat(packet.readBits(2)).isEqualTo(0)
     }
 
     private fun assertByte(value: Int, type: Modifier = Modifier.NONE) {

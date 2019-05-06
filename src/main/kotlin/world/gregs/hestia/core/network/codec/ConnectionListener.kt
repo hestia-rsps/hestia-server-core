@@ -2,24 +2,22 @@ package world.gregs.hestia.core.network.codec
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
-import world.gregs.hestia.core.network.Session
-import world.gregs.hestia.core.network.getSession
 
 /**
- * Handles activated and deactivated sessions
+ * Handles activated and deactivated channels
  */
 abstract class ConnectionListener : ChannelInboundHandlerAdapter() {
 
     override fun channelActive(ctx: ChannelHandlerContext) {
-        connect(ctx.getSession())
+        connect(ctx)
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
-        disconnect(ctx.getSession())
+        disconnect(ctx)
     }
 
-    abstract fun connect(session: Session)
+    abstract fun connect(ctx: ChannelHandlerContext)
 
-    abstract fun disconnect(session: Session)
+    abstract fun disconnect(ctx: ChannelHandlerContext)
 
 }

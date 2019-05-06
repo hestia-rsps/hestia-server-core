@@ -9,7 +9,7 @@ import world.gregs.hestia.core.network.Session
  * Handles a list of all connections
  * Used for closing all simultaneously (shutdown)
  */
-class ChannelHandler : ConnectionListener() {
+class ChannelHandler : ConnectionSessionListener() {
 
     private var channels: ChannelGroup = DefaultChannelGroup("channels", GlobalEventExecutor.INSTANCE)
 

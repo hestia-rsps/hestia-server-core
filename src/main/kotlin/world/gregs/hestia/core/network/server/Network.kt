@@ -1,6 +1,5 @@
 package world.gregs.hestia.core.network.server
 
-import world.gregs.hestia.core.network.server.threads.DecoderThreadFactory
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
@@ -10,8 +9,9 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import org.slf4j.LoggerFactory
+import world.gregs.hestia.core.network.server.threads.DecoderThreadFactory
 
-class Network(private val boss: EventLoopGroup = createGroup(true), private val worker: EventLoopGroup = createGroup(false), channel: ChannelInitializer<SocketChannel>, private val name: String = "Server") : ServerBootstrap() {
+class Network(private val boss: EventLoopGroup = createGroup(true), private val worker: EventLoopGroup? = createGroup(false), channel: ChannelInitializer<SocketChannel>, private val name: String = "Server") : ServerBootstrap() {
     init {
         group(boss, worker)
         channel(NioServerSocketChannel::class.java)
@@ -30,7 +30,7 @@ class Network(private val boss: EventLoopGroup = createGroup(true), private val 
 
     fun finish() {
         boss.shutdownGracefully()
-        worker.shutdownGracefully()
+        worker?.shutdownGracefully()
     }
 
     companion object {

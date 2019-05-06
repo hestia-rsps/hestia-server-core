@@ -24,7 +24,7 @@ abstract class PacketDecoder : ByteToMessageDecoder() {
     private var opcode = 0
     private var size = 0
 
-    @Throws(NullPointerException::class)
+    @Throws(IllegalStateException::class, IllegalArgumentException::class)
     override fun decode(ctx: ChannelHandlerContext, buf: ByteBuf, out: MutableList<Any>) {
         if (state == DecoderState.READ_OPCODE) {
             if (!buf.isReadable) {
@@ -34,7 +34,7 @@ abstract class PacketDecoder : ByteToMessageDecoder() {
             //Read packet opcode
             opcode = readOpcode(buf)
             //Find packet size
-            size = getSize(ctx, opcode)!!
+            size = getSize(ctx, opcode) ?: throw IllegalArgumentException("Unknown opcode: $opcode")
             //Read length if variable byte or short (-1, -2)
             state = if (size < 0) DecoderState.READ_LENGTH else DecoderState.READ_PAYLOAD
         }

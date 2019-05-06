@@ -21,7 +21,7 @@ abstract class MessageEncoder<T : Message> {
      * @param out The buffer to write the encoded data too
      * @param cipher The isaac cipher to encrypt with
      */
-    fun write(message: T, out: ByteBuf, cipher: Cipher? = null) {
+    open fun write(message: T, out: ByteBuf, cipher: Cipher? = null) {
         //Wrap the out buffer in a packet builder
         val packet = PacketWriter(buffer = out, cipher = cipher)
         //Encode the message into the packet buffer

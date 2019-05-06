@@ -1,17 +1,18 @@
-package world.gregs.hestia.core.network
+package world.gregs.hestia.core.network.pipe
 
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelPipeline
 import io.netty.channel.socket.SocketChannel
 import world.gregs.hestia.core.network.NetworkConstants.SESSION_KEY
+import world.gregs.hestia.core.network.Session
 
 /**
  * Pipeline
  * Easy to use [ChannelInitializer] with support for [Session], shared handlers and handlers instanced every initiation
  */
 @ChannelHandler.Sharable
-class Pipeline(private val action: (ChannelPipeline) -> Unit) : ChannelInitializer<SocketChannel>() {
+open class Pipeline(private val action: (ChannelPipeline) -> Unit) : ChannelInitializer<SocketChannel>() {
     private var sharedHandlers = ArrayList<Pair<String?, ChannelHandler>>()
 
     fun add(sharedHandler: ChannelHandler, name: String? = null) {
@@ -19,7 +20,7 @@ class Pipeline(private val action: (ChannelPipeline) -> Unit) : ChannelInitializ
     }
 
     @Throws(Exception::class)
-    public override fun initChannel(ch: SocketChannel) {
+    override fun initChannel(ch: SocketChannel) {
         ch.attr(SESSION_KEY).setIfAbsent(Session(ch))
 
         action.invoke(ch.pipeline())
