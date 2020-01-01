@@ -78,7 +78,7 @@ interface PacketBuilder {
      * Writes a [String] to [buffer].
      * @param value [String]
      */
-    fun writeString(value: String): PacketBuilder
+    fun writeString(value: String?): PacketBuilder
 
     /**
      * Writes a boolean as a byte to [buffer].
