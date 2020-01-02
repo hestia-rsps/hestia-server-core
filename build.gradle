@@ -4,7 +4,7 @@ plugins {
 apply plugin: 'maven'
 
 group 'world.gregs.hestia'
-version '0.4.3-SNAPSHOT'
+version '0.4.3'
 
 sourceCompatibility = 11.0
 
