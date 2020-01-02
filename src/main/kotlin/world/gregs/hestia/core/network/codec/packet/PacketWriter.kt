@@ -69,8 +69,10 @@ open class PacketWriter(private var opcode: Int? = null, private var type: Packe
         return this
     }
 
-    final override fun writeString(value: String): PacketBuilder {
-        writeBytes(value.toByteArray())
+    final override fun writeString(value: String?): PacketBuilder {
+        if(value != null) {
+            writeBytes(value.toByteArray())
+        }
         writeByte(0)
         return this
     }
