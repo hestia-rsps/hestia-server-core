@@ -7,8 +7,6 @@ object NetworkConstants {
 
     const val CLIENT_MAJOR_VERSION = 667
 
-    const val BASE_PORT = 43594
-
     val SESSION_KEY: AttributeKey<Session> = AttributeKey.valueOf<Session>("session.key")
 
     const val LOCALHOST = "127.0.0.1"//Don't change.
