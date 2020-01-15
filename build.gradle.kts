@@ -81,7 +81,6 @@ bintray {
     user = bintrayUser
     key = bintrayKey
     setConfigurations("archives")
-    publish = true
     pkg(delegateClosureOf<PackageConfig> {
         repo = "Hestia"
         name = "server-core"
