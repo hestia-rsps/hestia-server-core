@@ -1,17 +1,17 @@
 import java.util.Date
 import com.jfrog.bintray.gradle.BintrayExtension.*
-import org.gradle.api.publish.maven.MavenPom
 
 plugins {
     kotlin("jvm") version "1.3.61"
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
+    maven
     idea
     java
 }
 
-group = "world.gregs.hestia.core"
-version = "0.4.3"
+group = "world.gregs.hestia"
+version = "0.4.4"
 
 val bintrayUser: String by project
 val bintrayKey: String by project
@@ -53,26 +53,26 @@ artifacts {
     archives(sourcesJar)
 }
 
-fun MavenPom.addDependencies() = withXml {
-    asNode().appendNode("dependencies").let { depNode ->
-        configurations.compile.get().allDependencies.forEach {
-            depNode.appendNode("dependency").apply {
-                appendNode("groupId", it.group)
-                appendNode("artifactId", it.name)
-                appendNode("version", it.version)
-            }
-        }
-    }
-}
-
 publishing {
     publications {
-        create("production", MavenPublication::class) {
+        val production by creating(MavenPublication::class) {
+            from(components["java"])
             artifact("$buildDir/outputs/aar/app-release.aar")
-            groupId
-            artifactId = "server-core"
+            groupId = group.toString()
+            artifactId = "hestia-server-core"
             version = versionName
-            pom.addDependencies()
+            pom.withXml {
+                val dependenciesNode = asNode().appendNode("dependencies")
+                configurations.implementation.get().allDependencies.forEach {
+                    if (it.name != "unspecified") {
+                        dependenciesNode.appendNode("dependency").apply {
+                            appendNode("groupId", it.group)
+                            appendNode("artifactId", it.name)
+                            appendNode("version", it.version)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -81,9 +81,10 @@ bintray {
     user = bintrayUser
     key = bintrayKey
     setConfigurations("archives")
+    publish = true
     pkg(delegateClosureOf<PackageConfig> {
         repo = "Hestia"
-        name = "server-core"
+        name = "hestia-server-core"
         userOrg = "hestia-rsps"
         vcsUrl = "https://github.com/hestia-rsps/hestia-server-core.git"
         setLabels("kotlin")
@@ -91,7 +92,7 @@ bintray {
         publicDownloadNumbers = true
         version(delegateClosureOf<VersionConfig> {
             name = versionName
-            desc = "Library of shared core networking features required by all hestia servers"
+            desc = "Library of shared core networking features required by all Hestia servers"
             released = Date().toString()
             vcsTag = "v$versionName"
         })
