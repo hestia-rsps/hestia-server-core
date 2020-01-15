@@ -1,5 +1,6 @@
 import java.util.Date
 import com.jfrog.bintray.gradle.BintrayExtension.*
+import org.gradle.api.publish.maven.MavenPom
 
 plugins {
     kotlin("jvm") version "1.3.61"
@@ -53,26 +54,26 @@ artifacts {
     archives(sourcesJar)
 }
 
+fun MavenPom.addDependencies() = withXml {
+    asNode().appendNode("dependencies").let { depNode ->
+        configurations.compile.get().allDependencies.forEach {
+            depNode.appendNode("dependency").apply {
+                appendNode("groupId", it.group)
+                appendNode("artifactId", it.name)
+                appendNode("version", it.version)
+            }
+        }
+    }
+}
+
 publishing {
     publications {
-        val production by creating(MavenPublication::class) {
-            from(components["java"])
+        create("production", MavenPublication::class) {
             artifact("$buildDir/outputs/aar/app-release.aar")
-            groupId = group.toString()
+            groupId
             artifactId = "hestia-server-core"
             version = versionName
-            pom.withXml {
-                val dependenciesNode = asNode().appendNode("dependencies")
-                configurations.implementation.get().allDependencies.forEach {
-                    if (it.name != "unspecified") {
-                        dependenciesNode.appendNode("dependency").apply {
-                            appendNode("groupId", it.group)
-                            appendNode("artifactId", it.name)
-                            appendNode("version", it.version)
-                        }
-                    }
-                }
-            }
+            pom.addDependencies()
         }
     }
 }
