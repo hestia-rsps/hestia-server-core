@@ -13,7 +13,7 @@ object ClientOpcodes {
     const val PING_REPLY = 6
     const val CLAN_NAME = 7
     const val REMOVE_FRIEND = 8
-    const val MOB_OPTION_1 = 9
+    const val NPC_OPTION_1 = 9
     const val INTERFACE_OPTION_7 = 10
     const val OBJECT_OPTION_1 = 11
     const val WALK = 12
@@ -32,10 +32,10 @@ object ClientOpcodes {
     const val INTERFACE_OPTION_8 = 25
     const val SWITCH_INTERFACE_COMPONENTS = 26
     const val FLOOR_ITEM_OPTION_6 = 27
-    const val MOB_OPTION_5 = 28
+    const val NPC_OPTION_5 = 28
     const val MOVE_MOUSE = 29
     const val QUICK_PUBLIC_MESSAGE = 30
-    const val MOB_OPTION_3 = 31
+    const val NPC_OPTION_3 = 31
     const val KICK_FRIEND_CHAT = 32
     const val DONE_LOADING_REGION = 33
     const val REFRESH_WORLDS = 34
@@ -69,9 +69,9 @@ object ClientOpcodes {
     const val PLAYER_OPTION_8 = 62
     const val OTHER_TELEPORT = 63
     const val INTERFACE_OPTION_2 = 64
-    const val INTERFACE_ON_MOB = 65
-    const val MOB_OPTION_2 = 66
-    const val MOB_OPTION_4 = 67
+    const val INTERFACE_ON_NPC = 65
+    const val NPC_OPTION_2 = 66
+    const val NPC_OPTION_4 = 67
     const val KEY_TYPED = 68
     const val OBJECT_OPTION_5 = 69
     const val CONSOLE_COMMAND = 70
@@ -96,7 +96,7 @@ object ClientOpcodes {
     const val WORLD_MAP_CLICK = 89
     const val SCRIPT_4701 = 90
     const val INTERFACE_OPTION_9 = 91
-    const val MOB_OPTION_6 = 92
+    const val NPC_OPTION_6 = 92
     const val TOGGLE_FOCUS = 93
 
     /* Encode */
@@ -108,7 +108,7 @@ object ClientOpcodes {
     const val INTERFACE_COMPONENT_SETTINGS = 3
     const val INTERFACE_REFRESH = 4//TODO("Test") or WINDOW_REFRESH?
     const val INTERFACE_OPEN = 5
-    const val MOB_UPDATING = 6
+    const val NPC_UPDATING = 6
     const val INTERFACE_SCROLL_VERTICAL = 8//TODO("Test")
     const val INTERFACE_ITEM = 9
     const val FRIENDS_CHAT_UPDATE = 12
@@ -133,6 +133,7 @@ object ClientOpcodes {
     const val FLOOR_ITEM_PRIVATE = 48
     const val SCRIPT = 50
     const val LOGOUT = 51
+    const val CLIENT_VARC_STR = 54
     const val IGNORE_LIST = 57
     const val INTERFACE_MODEL = 58//TODO("Test")
     const val LOGOUT_LOBBY = 59
@@ -149,7 +150,7 @@ object ClientOpcodes {
     const val PUBLIC_CHAT = 91
     const val SKILL_LEVEL = 93
     const val PRIVATE_QUICK_CHAT_TO = 97
-    const val INTERFACE_MOB_HEAD = 98
+    const val INTERFACE_NPC_HEAD = 98
     const val CONFIG = 101
     const val CHAT = 102
     const val INTERFACE_COMPONENT_POSITION = 104//TODO("Test")
