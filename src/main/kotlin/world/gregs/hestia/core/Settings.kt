@@ -7,7 +7,7 @@ object Settings {
     private var map: Map<String, Any>? = null
     private var yaml: Yaml? = null
 
-    fun load(path: String = "./settings.yaml") {
+    fun load(path: String) {
         if(yaml == null) {
             yaml = Yaml()
         }
