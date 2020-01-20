@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "world.gregs.hestia"
-version = "0.4.5"
+version = "0.4.6"
 
 val bintrayUser: String by project
 val bintrayKey: String by project
@@ -27,12 +27,8 @@ repositories {
 dependencies {
     //Main
     implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("compiler-embeddable"))
     implementation("io.netty:netty-all:4.1.44.Final")
     implementation("org.yaml:snakeyaml:1.25")
-
-    //Utilities
-    implementation("com.google.guava:guava:28.2-jre")
 
     //Logging
     implementation("org.slf4j:slf4j-api:1.7.30")

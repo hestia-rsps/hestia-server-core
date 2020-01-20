@@ -1,7 +1,5 @@
 package world.gregs.hestia.core.services
 
-import org.jetbrains.kotlin.util.suffixIfNot
-
 
 /*
     Generic
@@ -10,7 +8,7 @@ import org.jetbrains.kotlin.util.suffixIfNot
 val Boolean?.int get() = if (this == true) 1 else 0
 
 fun String.plural(count: Int, plural: String = "s"): String {
-    return if(count == 1) this else this.suffixIfNot(plural)
+    return if(count == 1) this else removeSuffix(plural).plus(plural)
 }
 /**
  * Formats messages, all lower case characters except at the start of sentences.
