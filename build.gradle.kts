@@ -14,8 +14,8 @@ plugins {
 group = "world.gregs.hestia"
 version = "0.4.7"
 
-val bintrayUser: String by project
-val bintrayKey: String by project
+val bintrayUser: String? by project
+val bintrayKey: String? by project
 val versionName = version.toString()
 
 java.sourceCompatibility = JavaVersion.VERSION_11
