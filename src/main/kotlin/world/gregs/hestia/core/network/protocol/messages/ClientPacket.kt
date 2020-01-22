@@ -1,7 +1,7 @@
 package world.gregs.hestia.core.network.protocol.messages
 
 import world.gregs.hestia.core.network.codec.message.Message
-import world.gregs.hestia.core.network.codec.packet.Packet
+import world.gregs.hestia.network.packet.Packet
 
 /**
  * Client packet to be redirected to the login/social server (identified as a social packet)

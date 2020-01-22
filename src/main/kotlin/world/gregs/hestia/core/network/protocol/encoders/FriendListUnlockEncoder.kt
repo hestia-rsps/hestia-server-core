@@ -1,10 +1,10 @@
 package world.gregs.hestia.core.network.protocol.encoders
 
 import world.gregs.hestia.core.network.codec.message.MessageEncoder
-import world.gregs.hestia.core.network.codec.packet.Packet
-import world.gregs.hestia.core.network.codec.packet.PacketBuilder
 import world.gregs.hestia.core.network.protocol.ClientOpcodes.FRIEND_LIST
 import world.gregs.hestia.core.network.protocol.encoders.messages.FriendListUnlock
+import world.gregs.hestia.network.packet.Packet
+import world.gregs.hestia.network.packet.PacketBuilder
 
 class FriendListUnlockEncoder : MessageEncoder<FriendListUnlock>() {
 

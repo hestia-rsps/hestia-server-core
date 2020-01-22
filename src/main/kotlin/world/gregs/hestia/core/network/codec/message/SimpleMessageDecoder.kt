@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.MessageToMessageDecoder
 import org.slf4j.LoggerFactory
 import world.gregs.hestia.core.network.codec.Codec
-import world.gregs.hestia.core.network.codec.packet.Packet
+import world.gregs.hestia.network.packet.Packet
 import java.io.IOException
 
 /**

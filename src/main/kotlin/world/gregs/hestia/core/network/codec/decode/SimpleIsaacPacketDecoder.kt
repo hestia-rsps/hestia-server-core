@@ -1,9 +1,8 @@
 package world.gregs.hestia.core.network.codec.decode
 
 import io.netty.channel.ChannelHandlerContext
-import world.gregs.hestia.core.cache.crypto.Cipher
+import world.gregs.hestia.cache.crypto.Cipher
 import world.gregs.hestia.core.network.codec.Codec
-import world.gregs.hestia.core.network.codec.packet.Packet
 
 /**
  * Decodes inbound bytes into [Packet]s

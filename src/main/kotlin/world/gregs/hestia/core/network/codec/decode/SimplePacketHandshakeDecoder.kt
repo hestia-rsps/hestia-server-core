@@ -3,7 +3,6 @@ package world.gregs.hestia.core.network.codec.decode
 import io.netty.channel.ChannelHandlerContext
 import world.gregs.hestia.core.network.codec.HandshakeCodec
 import world.gregs.hestia.core.network.codec.message.MessageHandshake
-import world.gregs.hestia.core.network.codec.packet.Packet
 
 /**
  * Decodes inbound bytes into [Packet]s

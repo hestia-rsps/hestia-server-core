@@ -22,13 +22,18 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
+    maven(url = "https://dl.bintray.com/hestia-rsps/Hestia")
 }
 
 dependencies {
     //Main
     implementation(kotlin("stdlib-jdk8"))
+    implementation("world.gregs.hestia:hestia-cache-store:0.0.1")
     implementation("io.netty:netty-all:4.1.44.Final")
     implementation("org.yaml:snakeyaml:1.25")
+
+    //Utilities
+    implementation("com.google.guava:guava:28.2-jre")
 
     //Logging
     implementation("org.slf4j:slf4j-api:1.7.30")

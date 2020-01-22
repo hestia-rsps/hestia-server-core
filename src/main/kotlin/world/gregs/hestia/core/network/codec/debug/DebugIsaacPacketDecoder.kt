@@ -2,7 +2,7 @@ package world.gregs.hestia.core.network.codec.debug
 
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
-import world.gregs.hestia.core.cache.crypto.Cipher
+import world.gregs.hestia.cache.crypto.Cipher
 import world.gregs.hestia.core.network.codec.Codec
 import world.gregs.hestia.core.network.codec.decode.SimpleIsaacPacketDecoder
 
