@@ -3,7 +3,7 @@ package world.gregs.hestia.core.network.protocol.encoders
 import world.gregs.hestia.core.network.codec.message.MessageEncoder
 import world.gregs.hestia.core.network.protocol.WorldOpcodes.FRIENDS_CHAT_SETUP
 import world.gregs.hestia.core.network.protocol.messages.FriendsChatSetupRequest
-import world.gregs.hestia.network.packet.PacketBuilder
+import world.gregs.hestia.core.network.packet.PacketBuilder
 
 class FriendsChatSetupRequestEncoder : MessageEncoder<FriendsChatSetupRequest>() {
 

@@ -1,7 +1,7 @@
 package world.gregs.hestia.core.network.codec.message
 
 import io.netty.channel.ChannelHandlerContext
-import world.gregs.hestia.network.packet.Packet
+import world.gregs.hestia.core.network.packet.Packet
 
 abstract class MessageDecoder<T : Message>(val size: Int, vararg val opcodes: Int) {
 

@@ -28,7 +28,7 @@ repositories {
 dependencies {
     //Main
     implementation(kotlin("stdlib-jdk8"))
-    implementation("world.gregs.hestia:hestia-cache-store:0.0.1")
+    implementation("world.gregs.hestia:hestia-cache-store:0.0.3")
     implementation("io.netty:netty-all:4.1.44.Final")
     implementation("org.yaml:snakeyaml:1.25")
 

@@ -2,8 +2,8 @@ package world.gregs.hestia.core.network.codec.message
 
 import io.netty.buffer.ByteBuf
 import world.gregs.hestia.cache.crypto.Cipher
-import world.gregs.hestia.network.packet.PacketBuilder
-import world.gregs.hestia.network.packet.PacketWriter
+import world.gregs.hestia.core.network.packet.PacketBuilder
+import world.gregs.hestia.core.network.packet.PacketWriter
 
 abstract class MessageEncoder<T : Message> {
 

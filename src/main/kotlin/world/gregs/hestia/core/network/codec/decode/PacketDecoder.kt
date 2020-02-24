@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import org.slf4j.LoggerFactory
 import world.gregs.hestia.core.network.getSession
-import world.gregs.hestia.network.packet.PacketReader
+import world.gregs.hestia.core.network.packet.PacketReader
 
 /**
  * Reads inbound data into [PacketReader] which are added to the pipeline
