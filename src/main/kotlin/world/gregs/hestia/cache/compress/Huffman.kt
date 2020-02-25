@@ -1,5 +1,6 @@
 package world.gregs.hestia.cache.compress
 
+import com.displee.cache.CacheLibrary
 import io.netty.buffer.ByteBuf
 import world.gregs.hestia.core.network.packet.Packet
 import world.gregs.hestia.core.network.packet.PacketBuilder
@@ -16,8 +17,8 @@ object Huffman {
     private lateinit var HUFFMAN_DECRYPTED_KEYS: IntArray
     private var HUFFMAN_DECRYPTION_VALUES = listOf(0, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1)
 
-    fun init(cache: Cache) {
-        val huffman = cache.getFile(10, 1) ?: return
+    fun init(cache: CacheLibrary) {
+        val huffman = cache.index(10).archive(1)?.file(0)?.data ?: return
         HUFFMAN_FREQUENCIES = huffman
         HUFFMAN_MASKS = IntArray(huffman.size)
         HUFFMAN_DECRYPT_KEYS = IntArray(8)

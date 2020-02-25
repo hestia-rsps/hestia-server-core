@@ -31,6 +31,7 @@ dependencies {
     implementation("world.gregs.hestia:hestia-cache-store:0.0.3")
     implementation("io.netty:netty-all:4.1.44.Final")
     implementation("org.yaml:snakeyaml:1.25")
+    implementation("com.displee:rs-cache-library:6.0")
 
     //Utilities
     implementation("com.google.guava:guava:28.2-jre")
@@ -44,6 +45,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.14.0")
     testImplementation("org.mockito:mockito-core:3.2.4")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("io.mockk:mockk:1.9.3")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
