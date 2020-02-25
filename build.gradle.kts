@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "world.gregs.hestia"
-version = "0.4.8"
+version = "0.4.9"
 
 val bintrayUser: String? by project
 val bintrayKey: String? by project
@@ -28,7 +28,7 @@ repositories {
 dependencies {
     //Main
     implementation(kotlin("stdlib-jdk8"))
-    implementation("world.gregs.hestia:hestia-cache-store:0.0.3")
+    implementation("world.gregs.hestia:hestia-cache-store:0.0.6")
     implementation("io.netty:netty-all:4.1.44.Final")
     implementation("org.yaml:snakeyaml:1.25")
     implementation("com.displee:rs-cache-library:6.0")
