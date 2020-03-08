@@ -3,7 +3,7 @@ import com.jfrog.bintray.gradle.BintrayExtension.*
 import org.gradle.api.publish.maven.MavenPom
 
 plugins {
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "1.3.70"
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
     maven
@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "world.gregs.hestia"
-version = "0.4.9"
+version = "0.4.10"
 
 val bintrayUser: String? by project
 val bintrayKey: String? by project
